@@ -20,7 +20,7 @@ google-chrome-stable \
   --disable-software-rasterizer \
   > /var/lib/sapo_hub/tmp/chrome.log 2>&1 &
 
-for i in $(seq 1 10); do
+for i in $(seq 1 30); do
   sleep 1
   pgrep -f "google-chrome.*${CHROME_PROFILE}" > /dev/null 2>&1 && exit 0
 done
