@@ -4,6 +4,9 @@ description: Search Google for pictures of tigers and return the domain of the f
 user-invocable: true
 argument-hint: ""
 allowed-tools: Bash
+chrome: true
+prerequisites:
+  - chrome-open
 ---
 
 # Tiger Test
