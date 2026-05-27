@@ -36,15 +36,18 @@ DISPLAY=":${DISPLAY_NUM}" \
   --disable-software-rasterizer \
   >> /var/lib/sapo_hub/tmp/chrome.log 2>&1 &
 
-log "Chrome launched with PID $!"
+CHROME_PID=$!
+log "Chrome launched with PID ${CHROME_PID}"
 
 for i in $(seq 1 30); do
   sleep 1
-  if pgrep -f "google-chrome.*${CHROME_PROFILE}" > /dev/null 2>&1; then
+  alive=$(ps -p "$CHROME_PID" > /dev/null 2>&1 && echo "yes" || echo "no")
+  pgrep_result=$(pgrep -f "google-chrome.*${CHROME_PROFILE}" 2>/dev/null | tr '\n' ' ')
+  log "${i}s: PID ${CHROME_PID} alive=${alive} pgrep=[${pgrep_result}]"
+  if [ -n "$pgrep_result" ]; then
     log "Chrome detected running after ${i}s."
     exit 0
   fi
-  log "Waiting for Chrome... ${i}s"
 done
 
 log "ERROR: Chrome failed to start after 30s"
