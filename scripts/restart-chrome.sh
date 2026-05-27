@@ -7,6 +7,10 @@ XDG_RUNTIME=/var/lib/sapo_hub/tmp/runtime
 pkill -f "google-chrome.*${CHROME_PROFILE}" 2>/dev/null || true
 sleep 2
 
+rm -f "${CHROME_PROFILE}/SingletonLock" \
+      "${CHROME_PROFILE}/SingletonCookie" \
+      "${CHROME_PROFILE}/SingletonSocket"
+
 mkdir -p "$XDG_RUNTIME"
 XDG_RUNTIME_DIR="$XDG_RUNTIME" \
 DISPLAY=":99" \

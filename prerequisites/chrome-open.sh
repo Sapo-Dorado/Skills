@@ -9,6 +9,11 @@ if pgrep -f "google-chrome.*${CHROME_PROFILE}" > /dev/null 2>&1; then
   exit 0
 fi
 
+# Remove stale lock files from unclean shutdowns
+rm -f "${CHROME_PROFILE}/SingletonLock" \
+      "${CHROME_PROFILE}/SingletonCookie" \
+      "${CHROME_PROFILE}/SingletonSocket"
+
 mkdir -p "$XDG_RUNTIME"
 XDG_RUNTIME_DIR="$XDG_RUNTIME" \
 DISPLAY=":${DISPLAY_NUM}" \
