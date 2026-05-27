@@ -3,6 +3,7 @@
 
 CHROME_PROFILE=/var/lib/sapo_hub/.config/google-chrome
 XDG_RUNTIME=/var/lib/sapo_hub/tmp/runtime
+CHROME=/run/current-system/sw/bin/google-chrome-stable
 
 pkill -f "google-chrome.*${CHROME_PROFILE}" 2>/dev/null || true
 sleep 2
@@ -14,7 +15,7 @@ rm -f "${CHROME_PROFILE}/SingletonLock" \
 mkdir -p "$XDG_RUNTIME"
 XDG_RUNTIME_DIR="$XDG_RUNTIME" \
 DISPLAY=":99" \
-google-chrome-stable \
+"$CHROME" \
   --user-data-dir="$CHROME_PROFILE" \
   --no-first-run \
   --no-default-browser-check \
