@@ -9,12 +9,18 @@ LOG=/var/lib/sapo_hub/tmp/chrome-open.log
 
 log() { echo "[$(date '+%H:%M:%S')] $*" | tee -a "$LOG"; }
 
-mkdir -p /var/lib/sapo_hub/tmp
-log "chrome-open started. PATH=$PATH"
-log "Chrome binary: $CHROME (exists: $(test -f "$CHROME" && echo yes || echo NO))"
-log "Xvfb display :${DISPLAY_NUM}: $(DISPLAY=:${DISPLAY_NUM} xdpyinfo 2>/dev/null | head -1 || echo 'not available')"
+chrome_running() {
+  local lock="${CHROME_PROFILE}/SingletonLock"
+  [ -L "$lock" ] || return 1
+  local pid
+  pid=$(readlink "$lock" | grep -o '[0-9]*$')
+  [ -n "$pid" ] && kill -0 "$pid" 2>/dev/null
+}
 
-if pgrep -f "google-chrome.*${CHROME_PROFILE}" > /dev/null 2>&1; then
+mkdir -p /var/lib/sapo_hub/tmp
+log "chrome-open started."
+
+if chrome_running; then
   log "Chrome already running, exiting."
   exit 0
 fi
@@ -41,16 +47,14 @@ log "Chrome launched with PID ${CHROME_PID}"
 
 for i in $(seq 1 30); do
   sleep 1
-  alive=$(ps -p "$CHROME_PID" > /dev/null 2>&1 && echo "yes" || echo "no")
-  pgrep_result=$(pgrep -f "google-chrome.*${CHROME_PROFILE}" 2>/dev/null | tr '\n' ' ')
-  log "${i}s: PID ${CHROME_PID} alive=${alive} pgrep=[${pgrep_result}]"
-  if [ -n "$pgrep_result" ]; then
-    log "Chrome detected running after ${i}s."
+  if kill -0 "$CHROME_PID" 2>/dev/null; then
+    log "Chrome alive after ${i}s (PID ${CHROME_PID})."
     exit 0
   fi
+  log "Waiting for Chrome... ${i}s"
 done
 
-log "ERROR: Chrome failed to start after 30s"
-log "Last chrome.log lines: $(tail -5 /var/lib/sapo_hub/tmp/chrome.log 2>/dev/null)"
+log "ERROR: Chrome PID ${CHROME_PID} not alive after 30s"
+log "Last chrome.log: $(tail -3 /var/lib/sapo_hub/tmp/chrome.log 2>/dev/null)"
 echo "ERROR: Chrome failed to start" >&2
 exit 1
