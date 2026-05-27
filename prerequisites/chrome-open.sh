@@ -9,11 +9,6 @@ if pgrep -f "google-chrome.*${CHROME_PROFILE}" > /dev/null 2>&1; then
   exit 0
 fi
 
-if ! DISPLAY=":${DISPLAY_NUM}" xdpyinfo > /dev/null 2>&1; then
-  Xvfb ":${DISPLAY_NUM}" -screen 0 1920x1080x24 &
-  sleep 2
-fi
-
 mkdir -p "$XDG_RUNTIME"
 XDG_RUNTIME_DIR="$XDG_RUNTIME" \
 DISPLAY=":${DISPLAY_NUM}" \

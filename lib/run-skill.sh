@@ -6,7 +6,7 @@ SKILLS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/.claude/skills"
 PREREQS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/prerequisites"
 SOURCE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
-CLAUDE=$(find /nix/store -maxdepth 2 -name "claude" -path "*/claude-code-*/bin/claude" 2>/dev/null | sort -V | tail -1)
+CLAUDE=$(ls -d /nix/store/*-claude-code-*/bin/claude 2>/dev/null | sort -t- -k4 -V | tail -1)
 if [ -z "$CLAUDE" ]; then
   echo "ERROR: claude binary not found" >&2
   exit 1
@@ -14,7 +14,7 @@ fi
 
 _parse_frontmatter_list() {
   local file="$1" field="$2"
-  awk "/^${field}:/{found=1; next} found && /^ *-/{gsub(/^ *- */, \"\"); print; next} found{exit}" "$file"
+  awk "/^${field}:/{found=1; next} found && /^ *- /{gsub(/^ *- */, \"\"); print; next} found{exit}" "$file"
 }
 
 _parse_frontmatter_value() {
