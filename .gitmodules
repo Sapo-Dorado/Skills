@@ -1,0 +1,3 @@
+[submodule ".claude/skills/pauper-staples/repos/pauperfall"]
+	path = .claude/skills/pauper-staples/repos/pauperfall
+	url = https://github.com/Sapo-Dorado/Pauperfall.git
