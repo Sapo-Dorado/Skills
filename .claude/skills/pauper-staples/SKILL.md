@@ -6,18 +6,12 @@ description: >
 user-invocable: true
 argument-hint: ""
 allowed-tools: Bash, Read, Write, Edit
-chrome: true
 ---
 
 # Pauper Staples Scraper
 
 Scrape MTG Pauper card staples from mtgdecks.net using Claude in Chrome,
 then update the Pauperfall repository with fresh data.
-
-## Requirements
-
-- Claude in Chrome must be enabled (`--chrome` flag)
-- Chrome must be open and connected
 
 ## IMPORTANT: No fallbacks
 

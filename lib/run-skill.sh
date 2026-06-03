@@ -47,18 +47,18 @@ run_skill() {
     fi
   done <<< "$prerequisites"
 
-  local allowed_tools chrome_flag
+  local allowed_tools
   allowed_tools=$(_parse_frontmatter_value "$skill_file" "allowed-tools")
-  chrome=$(_parse_frontmatter_value "$skill_file" "chrome")
 
-  local claude_args=("--print" "/${skill_name}")
-  [ -n "$allowed_tools" ] && claude_args+=("--allowedTools" "$allowed_tools")
-  if [ "$chrome" = "true" ]; then
-    claude_args+=("--chrome")
-    claude_args+=("--allowedTools" "mcp__claude-in-chrome__navigate,mcp__claude-in-chrome__javascript_tool,${allowed_tools}")
-    export DISPLAY=":99"
-    export XDG_RUNTIME_DIR="/var/lib/sapo_hub/tmp/runtime"
-  fi
+  export DISPLAY=":99"
+  export XDG_RUNTIME_DIR="/var/lib/sapo_hub/tmp/runtime"
+
+  local chrome_tools="mcp__claude-in-chrome__browser_batch,mcp__claude-in-chrome__computer,mcp__claude-in-chrome__find,mcp__claude-in-chrome__form_input,mcp__claude-in-chrome__get_page_text,mcp__claude-in-chrome__gif_creator,mcp__claude-in-chrome__javascript_tool,mcp__claude-in-chrome__navigate,mcp__claude-in-chrome__read_console_messages,mcp__claude-in-chrome__read_network_requests,mcp__claude-in-chrome__read_page,mcp__claude-in-chrome__tabs_close_mcp,mcp__claude-in-chrome__tabs_context_mcp,mcp__claude-in-chrome__tabs_create_mcp"
+
+  local all_tools="${chrome_tools}"
+  [ -n "$allowed_tools" ] && all_tools="${all_tools},${allowed_tools}"
+
+  local claude_args=("--print" "/${skill_name}" "--chrome" "--allowedTools" "$all_tools")
 
   local output
   output=$(cd "$SOURCE_DIR" && "$CLAUDE" "${claude_args[@]}" 2>&1)
