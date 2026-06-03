@@ -7,8 +7,6 @@ user-invocable: true
 argument-hint: ""
 allowed-tools: Bash, Read, Write, Edit
 chrome: true
-prerequisites:
-  - chrome-open
 ---
 
 # Pauper Staples Scraper

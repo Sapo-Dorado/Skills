@@ -5,8 +5,6 @@ user-invocable: true
 argument-hint: ""
 allowed-tools: Bash
 chrome: true
-prerequisites:
-  - chrome-open
 ---
 
 # Tiger Test
