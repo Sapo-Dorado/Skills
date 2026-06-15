@@ -117,7 +117,22 @@ git commit -m "Update pauper staples data from mtgdecks.net"
 git push
 ```
 
-### 6. Output
+### 6. Update submodule reference in skills repo
+
+After the pauperfall push, update the submodule pointer in the parent skills repo so
+the tree stays clean:
+
+```bash
+cd <skills repo root>   # the root of the skills source checkout
+git add .claude/skills/pauper-staples/repos/pauperfall
+git commit -m "Update pauperfall submodule to latest"
+git push
+```
+
+The skills repo root is the directory that contains `.claude/` — navigate up from the
+submodule path until you find it.
+
+### 7. Output
 
 On success output:
 ```
